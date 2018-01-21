@@ -178,6 +178,48 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1001 &355498378
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4783961976355726, guid: 5942a0c6779127149b32f59f9fb362d5, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4783961976355726, guid: 5942a0c6779127149b32f59f9fb362d5, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4783961976355726, guid: 5942a0c6779127149b32f59f9fb362d5, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4783961976355726, guid: 5942a0c6779127149b32f59f9fb362d5, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4783961976355726, guid: 5942a0c6779127149b32f59f9fb362d5, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4783961976355726, guid: 5942a0c6779127149b32f59f9fb362d5, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4783961976355726, guid: 5942a0c6779127149b32f59f9fb362d5, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4783961976355726, guid: 5942a0c6779127149b32f59f9fb362d5, type: 2}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 5942a0c6779127149b32f59f9fb362d5, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &1153372280
 GameObject:
   m_ObjectHideFlags: 0
@@ -310,14 +352,13 @@ GameObject:
   - component: {fileID: 1615057805}
   - component: {fileID: 1615057804}
   - component: {fileID: 1615057808}
-  - component: {fileID: 1615057809}
   m_Layer: 0
   m_Name: Dragon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1615057804
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -438,20 +479,6 @@ MonoBehaviour:
   fallGravity: 5
   jumpGravity: 2
   floatGravity: 0.1
---- !u!114 &1615057809
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1615057803}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca0b3d4ece713814883e0ce29942f76b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  numberOfRays: 5
-  smallShootedBesla: {fileID: 1052210026651742, guid: 5f0deda67ca4b784f8fde7b671ffaa72,
-    type: 2}
 --- !u!1 &1885195289
 GameObject:
   m_ObjectHideFlags: 0
