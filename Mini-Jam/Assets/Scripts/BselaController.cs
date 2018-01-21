@@ -34,35 +34,32 @@ public class BselaController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-#region Move Controlls
-        if (Input.GetKey(KeyCode.D))
+        #region Move Controlls
+        float mydirection=Input.GetAxis("Horizontal1");
+        if (mydirection>0)
         {
             var velocity = bsela.velocity;
             velocity.x = 10;
             bsela.velocity = velocity;
         }
-        if (Input.GetKeyUp(KeyCode.D))
+        else if (mydirection<0)
+        {
+
+            var velocity = bsela.velocity;
+            velocity.x = -10;
+            bsela.velocity = velocity;
+        }
+        else
         {
             var velocity = bsela.velocity;
             velocity.x = 0;
             bsela.velocity = velocity;
         }
 
-        if (Input.GetKey(KeyCode.A))
-        {
-            var velocity = bsela.velocity;
-            velocity.x = -10;
-            bsela.velocity = velocity;
-        }
-        if (Input.GetKeyUp(KeyCode.A))
-        {
-            var velocity = bsela.velocity;
-            velocity.x = 0;
-            bsela.velocity = velocity;
-        }
+       
         #endregion
         #region Jump Controlls
-        if (Input.GetKeyDown(KeyCode.Space)&&(isGrounded||canDoubleJump))
+        if (Input.GetKeyDown(KeyCode.Joystick1Button0)&&(isGrounded||canDoubleJump))
         {
             if (isGrounded == true && canDoubleJump == false)
             {
