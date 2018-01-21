@@ -80,8 +80,7 @@ public class BselaController : MonoBehaviour {
                 var velocity = bsela.velocity;
                 velocity.y = 10;
                 bsela.velocity = velocity;
-                canDoubleJump = false;
-              
+                canDoubleJump = false;              
             }
             
            
