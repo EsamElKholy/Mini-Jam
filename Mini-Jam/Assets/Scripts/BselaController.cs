@@ -102,7 +102,7 @@ public class BselaController : MonoBehaviour {
             }
         }
         #endregion
-        #region Shooting besla 
+        #region Shooting bsela 
         if (Input.GetKeyUp(KeyCode.F))
         {
             Vector3 position = new Vector3();
@@ -117,15 +117,6 @@ public class BselaController : MonoBehaviour {
 
 
 
-    void OnCollisionEnter(Collision otherObj)
-    {
-        Debug.Log("boom");
-        if (otherObj.gameObject.tag == "Dragon")
-        {
-            Destroy(smallShootedBesla);
-            Debug.Log("boomBoom");
-
-        }
-    }
+    
 }
 
