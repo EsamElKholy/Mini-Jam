@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyTime: 1
-  tagName: Dragon
+  targetTag: Bsela
 --- !u!212 &212087601903238256
 SpriteRenderer:
   m_ObjectHideFlags: 1

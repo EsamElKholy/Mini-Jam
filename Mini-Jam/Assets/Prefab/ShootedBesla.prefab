@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 114740152666764512}
   m_Layer: 9
   m_Name: ShootedBesla
-  m_TagString: BeslaBullet
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyTime: 1
-  tagName: 
+  targetTag: Dragon
 --- !u!212 &212087601903238256
 SpriteRenderer:
   m_ObjectHideFlags: 1
