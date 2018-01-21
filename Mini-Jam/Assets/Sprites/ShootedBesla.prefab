@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 212087601903238256}
   - component: {fileID: 50567423083723360}
   - component: {fileID: 61706923172965530}
+  - component: {fileID: 114740152666764512}
   m_Layer: 0
   m_Name: ShootedBesla
   m_TagString: BeslaBullet
@@ -87,6 +88,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &114740152666764512
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1052210026651742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e19858af865de84f89f632dbbfe706c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destroyTime: 1
 --- !u!212 &212087601903238256
 SpriteRenderer:
   m_ObjectHideFlags: 1
