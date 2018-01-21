@@ -6,22 +6,24 @@ public class ShootProjectile : MonoBehaviour
 {
     public GameObject projectile;
 
-	// Use this for initialization
-	void Start ()
-    {
-		
-	}
-	
-	// Update is called once per frame
-	void Update ()
+    // Update is called once per frame
+
+    public void Shoot(float dir)
     {
         if (Input.GetKeyUp(KeyCode.F))
         {
             Vector3 position = new Vector3();
-            position = transform.position;
-            var newlyCreatedBsela = Instantiate(projectile, position, new Quaternion());
+            position = this.transform.position;
+            var newlyCreatedBsela = Instantiate(projectile, position, transform.rotation);
             Vector2 newlyCreatedObjectVelocity = newlyCreatedBsela.GetComponent<Rigidbody2D>().velocity;
-            newlyCreatedObjectVelocity.x = 10;
+            if (dir > 0)
+            {
+                newlyCreatedObjectVelocity.x = 10;
+            }
+            else
+            {
+                newlyCreatedObjectVelocity.x = -10;
+            }
             newlyCreatedBsela.GetComponent<Rigidbody2D>().velocity = newlyCreatedObjectVelocity;
         }
     }

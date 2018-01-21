@@ -8,8 +8,9 @@ public class BulletControllerForBsela : MonoBehaviour
 	// Use this for initialization
     public float destroyTime;
     public string targetTag;
-	void Start ()
+    void Start ()
     {
+        
         Destroy(this.gameObject, destroyTime);
     }
 	

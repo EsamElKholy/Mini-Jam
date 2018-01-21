@@ -12,8 +12,14 @@ public class BselaController : MonoBehaviour {
     Collider2D collider;
     public int numberOfRays;
     Vector2[] rayCastDown;
+    //facing direction is a float that is positive when the character is facing right and negative when he is facing left
+    float facingDirection;
     public GameObject smallShootedBesla;
+
+    ShootProjectile shootProjectile;
 	void Start () {
+        shootProjectile = GetComponent<ShootProjectile>();
+        facingDirection = 1;
         bsela = GetComponent<Rigidbody2D>();
         isGrounded = true;
         canDoubleJump = false;
@@ -41,6 +47,7 @@ public class BselaController : MonoBehaviour {
             var velocity = bsela.velocity;
             velocity.x = 10;
             bsela.velocity = velocity;
+            facingDirection = 1;
         }
         else if (mydirection<0)
         {
@@ -48,6 +55,7 @@ public class BselaController : MonoBehaviour {
             var velocity = bsela.velocity;
             velocity.x = -10;
             bsela.velocity = velocity;
+            facingDirection = -1;
         }
         else
         {
@@ -99,15 +107,8 @@ public class BselaController : MonoBehaviour {
         }
         #endregion
         #region Shooting bsela 
-        if (Input.GetKeyUp(KeyCode.F))
-        {
-            Vector3 position = new Vector3();
-            position = bsela.transform.position;
-           var newlyCreatedBsela= Instantiate(smallShootedBesla, position,new Quaternion());
-            Vector2 newlyCreatedObjectVelocity = newlyCreatedBsela.GetComponent<Rigidbody2D>().velocity;
-            newlyCreatedObjectVelocity.x = 10;
-            newlyCreatedBsela.GetComponent<Rigidbody2D>().velocity = newlyCreatedObjectVelocity;
-        }
+        shootProjectile.Shoot(facingDirection);
+     
         #endregion
     }
 

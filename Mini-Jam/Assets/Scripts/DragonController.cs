@@ -18,10 +18,13 @@ public class DragonController : MonoBehaviour
     public float fallGravity = 5;
     public float jumpGravity = 2;
     public float floatGravity = 0.3f;
-
+    float facingDirection;
+    ShootProjectile shootProjectile;
     // Use this for initialization
     void Start ()
     {
+        shootProjectile = GetComponent<ShootProjectile>();
+        facingDirection = 1;
         body = GetComponent<Rigidbody2D>();
         isGrounded = true;
         canFloat = false;
@@ -46,30 +49,34 @@ public class DragonController : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-#region MOVEMENT
-        if (Input.GetKey(KeyCode.A))
+        #region MOVEMENT
+        float mydirection = Input.GetAxis("Horizontal2");
+        if (mydirection > 0)
         {
-            MoveH(-speed);
+            var velocity = body.velocity;
+            velocity.x = 10;
+            body.velocity = velocity;
+            facingDirection = 1;
+        }
+        else if (mydirection < 0)
+        {
+
+            var velocity = body.velocity;
+            velocity.x = -10;
+            body.velocity = velocity;
+            facingDirection = -1;
+        }
+        else
+        {
+            var velocity = body.velocity;
+            velocity.x = 0;
+            body.velocity = velocity;
         }
 
-        if (Input.GetKeyUp(KeyCode.A))
-        {
-            MoveH(0.0f);
-        }
-
-        if (Input.GetKey(KeyCode.D))
-        {
-            MoveH(speed);
-        }
-
-        if (Input.GetKeyUp(KeyCode.D))
-        {
-            MoveH(0.0f);
-        }
         #endregion
 
-#region JUMP AND FLOAT
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        #region JUMP AND FLOAT
+        if (Input.GetKeyDown(KeyCode.Joystick2Button0) && isGrounded)
         {
             if (isGrounded == true && canFloat == false)
             {
@@ -81,7 +88,7 @@ public class DragonController : MonoBehaviour
                 isGrounded = false;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.Space) && canFloat)
+        else if (Input.GetKeyDown(KeyCode.Joystick2Button0) && canFloat)
         {
             body.gravityScale = jumpGravity;
             var velocity = body.velocity;
@@ -90,7 +97,7 @@ public class DragonController : MonoBehaviour
             canFloat = false;
             isFloating = true;
         }
-        else if (Input.GetKeyUp(KeyCode.Space) && isFloating)
+        else if (Input.GetKeyUp(KeyCode.Joystick2Button0) && isFloating)
         {
             isFloating = false;
         }
@@ -124,11 +131,15 @@ public class DragonController : MonoBehaviour
             isFloating = false;
             canFloat = false;
         }
-        #endregion        
+        #endregion
+
+        #region Shoot
+        shootProjectile.Shoot(facingDirection);
+        #endregion
     }
 
-    void MoveH(float h)
-    {
-        body.velocity = new Vector3(h, body.velocity.y);
-    }
+    //void MoveH(float h)
+    //{
+    //    body.velocity = new Vector3(h, body.velocity.y);
+    //}
 }
