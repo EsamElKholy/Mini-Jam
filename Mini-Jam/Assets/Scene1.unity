@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 117360012}
   - component: {fileID: 117360011}
   - component: {fileID: 117360015}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bsela
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 50567423083723360}
   - component: {fileID: 61706923172965530}
   - component: {fileID: 114740152666764512}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ShootedBesla
   m_TagString: BeslaBullet
   m_Icon: {fileID: 0}
