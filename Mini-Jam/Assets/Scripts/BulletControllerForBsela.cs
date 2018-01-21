@@ -17,12 +17,11 @@ public class BulletControllerForBsela : MonoBehaviour {
    
     private void OnCollisionEnter2D(Collision2D otherObj)
     {
-        Debug.Log("boom");
+
         if (otherObj.gameObject.tag == "Dragon")
         {
             Destroy(this.gameObject);
-            Debug.Log("boomBoom");
-
+ 
         }
     }
 
