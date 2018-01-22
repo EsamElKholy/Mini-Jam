@@ -42,6 +42,7 @@ public class SimpleScreenShake : MonoBehaviour
             shakeDuration = 0f;
 
             camTransform.localPosition = originalPos;
+            enabled = false;
         }
 
     }

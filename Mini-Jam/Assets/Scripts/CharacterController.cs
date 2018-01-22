@@ -35,6 +35,12 @@ public class CharacterController : MonoBehaviour
     private KeyCode lightMelee;
     private KeyCode heavyMelee;
     private KeyCode block;
+    private KeyCode ultimate1;
+    private KeyCode ultimate2;
+    private KeyCode dash;
+
+    public int heavyMeleeCost;
+    public int ultimateAttackCost;
 
     public int playerNumber;
 
@@ -42,12 +48,25 @@ public class CharacterController : MonoBehaviour
 
     public bool isBlocking;
     private SimpleScreenShake shake;
+    private PlayerInfo info;
+    public Collider2D carrotCollider;
+
+    public float ultimateWaitTime;
+    private float ultimateWaitCounter;
+
+    public float dashForce;
+    public bool isDashing;
+
+    private Vector3 dashVel;
+    public float dashWaitTime;
+    private float dashTimeCounter;
 
     // Use this for initialization
     void Start ()
     {
         myDirection = 0;
         isBlocking = false;
+        isDashing = false;
 
         if (Input.GetJoystickNames().Length <= 1)
         {
@@ -62,6 +81,9 @@ public class CharacterController : MonoBehaviour
                 lightMelee = KeyCode.Z;
                 heavyMelee = KeyCode.C;
                 block = KeyCode.G;
+                ultimate1 = KeyCode.V;
+                ultimate2 = KeyCode.B;
+                dash = KeyCode.R;
             }
             else if (playerNumber == 2)
             {
@@ -72,6 +94,9 @@ public class CharacterController : MonoBehaviour
                 lightMelee = KeyCode.Keypad1;
                 heavyMelee = KeyCode.Keypad7;
                 block = KeyCode.Keypad3;
+                ultimate1 = KeyCode.O;
+                ultimate2 = KeyCode.P;
+                dash = KeyCode.I;
             }            
         }
         else
@@ -85,6 +110,9 @@ public class CharacterController : MonoBehaviour
                 lightMelee = KeyCode.Joystick1Button2;
                 heavyMelee = KeyCode.Joystick1Button3;
                 block = KeyCode.Joystick1Button5;
+                ultimate1 = KeyCode.Joystick1Button6;
+                ultimate2 = KeyCode.Joystick1Button7;
+                dash = KeyCode.Joystick1Button4;
             }
             else if (playerNumber == 2)
             {
@@ -93,10 +121,20 @@ public class CharacterController : MonoBehaviour
                 lightMelee = KeyCode.Joystick2Button2;
                 heavyMelee = KeyCode.Joystick2Button3;
                 block = KeyCode.Joystick2Button5;
+                ultimate1 = KeyCode.Joystick2Button6;
+                ultimate2 = KeyCode.Joystick2Button7;
+                dash = KeyCode.Joystick2Button4;
             }           
         }
 
-        //projectile = GetComponent<ShootProjectile>();
+        heavyMeleeCost = 25;
+        ultimateAttackCost = 70;
+        ultimateWaitTime = 30.0f / 60.0f;
+        ultimateWaitCounter = 0;
+        dashForce = 35;
+        dashWaitTime = 0.17f;
+        dashTimeCounter = 0;
+
         facingDirection = 1;
         body = GetComponent<Rigidbody2D>();
         isGrounded = true;
@@ -110,6 +148,7 @@ public class CharacterController : MonoBehaviour
 
         myCollider = GetComponent<Collider2D>();
         myAnimator = GetComponent<Animator>();
+        info = GetComponent<PlayerInfo>();
         shake = Camera.main.GetComponent<SimpleScreenShake>();
 
         xMin = myCollider.bounds.min.x - this.transform.position.x;
@@ -134,22 +173,45 @@ public class CharacterController : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        Move();
-
-        if (playerNumber == 1)
+        if (!info.isDead)
         {
-            JumpWithDouble();
-        }
-        else if (playerNumber == 2)
-        {
-            JumpWithFloat();
-        }
+            Move();
+            Dash();
 
-        Shoot();
-        LightMelee();
-        HeavyMelee();
-        Block();
-	}
+            if (playerNumber == 1)
+            {
+                JumpWithDouble();
+            }
+            else if (playerNumber == 2)
+            {
+                JumpWithFloat();
+            }
+
+            Shoot();
+            LightMelee();
+
+            if (info.Energy >= heavyMeleeCost)
+            {
+                if (playerNumber == 1)
+                {
+                    HeavyMeleeBsela();
+                }
+                else if (playerNumber == 2)
+                {
+                    HeavyMeleeDragon();
+                }
+            }
+
+            if (info.Energy >= ultimateAttackCost)
+            {
+                UltimateAttack();
+            }
+
+            Block();
+        }
+        
+        Die();
+    }
 
     void Move()
     {
@@ -180,6 +242,7 @@ public class CharacterController : MonoBehaviour
             body.velocity = velocity;
             facingDirection = 1;
             scale.x = Mathf.Abs(scale.x);
+            myAnimator.SetBool("isWalking", true);
         }
         else if (myDirection < 0)
         {
@@ -188,14 +251,15 @@ public class CharacterController : MonoBehaviour
             velocity.x = -10;
             body.velocity = velocity;
             facingDirection = -1;
-
             scale.x = Mathf.Abs(scale.x) * facingDirection;
+            myAnimator.SetBool("isWalking", true);
         }
         else
         {
             var velocity = body.velocity;
             velocity.x = 0;
             body.velocity = velocity;
+            myAnimator.SetBool("isWalking", false);
         }
 
         transform.localScale = scale;
@@ -205,15 +269,17 @@ public class CharacterController : MonoBehaviour
     {
         if (Input.GetKeyDown(jump) && (isGrounded || canDoubleJump))
         {
+            myAnimator.SetBool("jump", true);
             if (isGrounded == true && canDoubleJump == false)
             {
+                
                 body.gravityScale = jumpGravity;
                 var velocity = body.velocity;
                 velocity.y = 10;
                 body.velocity = velocity;
                 canDoubleJump = true;
                 isGrounded = false;
-                //myAnimator.SetBool("jump",true);
+                
 
 
             }
@@ -227,10 +293,11 @@ public class CharacterController : MonoBehaviour
             }
         }
 
-        if (body.velocity.y < 0)
+        if (body.velocity.y <= 0)
         {
-            //myAnimator.SetBool("jump", false);
-            //myAnimator.SetBool("fall", true);
+            print(body.velocity.y);
+            myAnimator.SetBool("jump", false);
+            myAnimator.SetBool("fall", true);
             body.gravityScale = fallGravity / 2.0f;
             for (int i = 0; i < numberOfRays; i++)
             {
@@ -239,8 +306,8 @@ public class CharacterController : MonoBehaviour
                 if (hit)
                 {
                     isGrounded = true;
-                    //myAnimator.SetBool("jump", false);
-                    //myAnimator.SetBool("fall", false);
+                    myAnimator.SetBool("jump", false);
+                    myAnimator.SetBool("fall", false);
 
                 }
             }
@@ -251,6 +318,7 @@ public class CharacterController : MonoBehaviour
     {
         if (Input.GetKeyDown(jump) && isGrounded)
         {
+            myAnimator.SetBool("jump", true);
             if (isGrounded == true && canFloat == false)
             {
                 body.gravityScale = jumpGravity;
@@ -259,7 +327,7 @@ public class CharacterController : MonoBehaviour
                 body.velocity = velocity;
                 canFloat = true;
                 isGrounded = false;
-                myAnimator.SetBool("jump", true);
+                
             }
         }
         else if (Input.GetKeyDown(jump) && canFloat)
@@ -303,6 +371,8 @@ public class CharacterController : MonoBehaviour
                     isFloating = false;
                     canFloat = false;
                     myAnimator.SetBool("canFloat", false);
+                    myAnimator.SetBool("isWalking", false);
+                    myAnimator.SetBool("fall", false);
                 }
             }
         }
@@ -318,8 +388,18 @@ public class CharacterController : MonoBehaviour
 
     void Shoot()
     {
-        if (Input.GetKeyUp(fire))
+        if (Input.GetKeyDown(fire))
         {
+            if (myAnimator.GetBool("isAttacking") == false)
+            {
+                myAnimator.SetBool("isAttacking", true);
+            }           
+
+        }
+        else if (Input.GetKeyUp(fire))
+        {                        
+            myAnimator.SetBool("isAttacking", false);
+
             Vector3 position = new Vector3();
             position = spawnProjectiles.transform.position;
             var newlyCreatedBsela = Instantiate(projectile, position, transform.rotation);
@@ -383,20 +463,34 @@ public class CharacterController : MonoBehaviour
 
     void Block()
     {
-        if (Input.GetKeyDown(block))
+        if (info.Energy > 0)
         {
-            isBlocking = true;
-        }
-        else if (Input.GetKeyUp(block))
-        {
-            isBlocking = false;
-        }
+            if (Input.GetKeyDown(block))
+            {
+                isBlocking = true;
+            }
+            else if (Input.GetKeyUp(block))
+            {
+                isBlocking = false;
+            }
+        }       
     }
 
-    void HeavyMelee()
+    void HeavyMeleeBsela()
     {
         if (Input.GetKeyDown(heavyMelee))
         {
+            info.AddEnergy(-heavyMeleeCost);
+            carrotCollider.enabled = true;
+        }
+    }
+
+    void HeavyMeleeDragon()
+    {
+        if (Input.GetKeyDown(heavyMelee))
+        {
+            info.AddEnergy(-heavyMeleeCost);
+
             shake.enabled = false;
             shake.shakeDuration = 0.5f;
             shake.enabled = true;
@@ -418,25 +512,85 @@ public class CharacterController : MonoBehaviour
 
             if (hit)
             {
-                if (hit.collider.tag == "Bsela" || hit.collider.tag == "Dragon")
+                if (hit.collider.tag == "Bsela")
                 {
                     var controller = hit.collider.GetComponent<CharacterController>();
-                    var info = GetComponent<PlayerInfo>();
                     var otherInfo = hit.collider.GetComponent<PlayerInfo>();
 
                     if (controller.isBlocking && otherInfo.Energy > 0)
                     {
                         otherInfo.AddHealth(-10);
                         otherInfo.AddEnergy(-15);
-                        info.AddEnergy(-25);
                     }
                     else
                     {
                         otherInfo.AddHealth(-15);
-                        info.AddEnergy(-25);
                     }
                 }
             }
+        }
+    }
+
+    void UltimateAttack()
+    {
+        if (Input.GetKey(ultimate1))
+        {
+            ultimateWaitCounter += Time.deltaTime;
+
+            if (ultimateWaitCounter <= ultimateWaitTime)
+            {
+                if (Input.GetKeyDown(ultimate2))
+                {
+                    info.AddEnergy(-ultimateAttackCost);
+                }                
+            }
+        }
+
+        if (ultimateWaitCounter > ultimateWaitTime)
+        {
+            ultimateWaitCounter = 0;
+        }
+    }
+
+    void Die()
+    {
+        if (info.Health == 0)
+        {
+            info.isDead = true;
+        }
+    }
+
+   void Dash()
+    {
+        if (myAnimator == null)
+        {
+            return;
+        }
+
+        if (Input.GetKeyUp(dash))
+        {
+            isDashing = true;
+            myAnimator.SetBool("dash", true);
+            dashVel = body.velocity + (Vector2.right * facingDirection * dashForce);
+            info.AddEnergy(-10);
+        }
+
+        if (isDashing)
+        {
+            var vel = Vector3.Lerp(body.velocity, dashVel, 1);
+            dashTimeCounter += Time.deltaTime;
+            body.velocity = vel;
+        }
+
+        //print(Vector3.Distance(transform.position, dashVel + (Vector3.right * facingDirection * dashDistance)));
+
+        //print(body.velocity.x);
+        if (isDashing && dashTimeCounter >= dashWaitTime)// Vector3.Distance(transform.position, dashVel + (Vector3.right * facingDirection * dashDistance)) <= 0.01f)
+        {
+            body.velocity = new Vector2(0, body.velocity.y);
+            isDashing = false;
+            myAnimator.SetBool("dash", false);
+            dashTimeCounter = 0;
         }
     }
 }

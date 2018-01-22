@@ -8,6 +8,7 @@ TagManager:
   - Bsela
   - Bullet
   - BeslaBullet
+  - LootBox
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - Bsela
   - Bullets
   - Dragon
-  - 
+  - LootBox
   - 
   - 
   - 

@@ -11,18 +11,17 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1352469227588762}
   m_IsPrefabParent: 1
---- !u!1 &1305045186600706
+--- !u!1 &1044447677178022
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4380373049066668}
-  - component: {fileID: 65472026903810494}
+  - component: {fileID: 4961218734647690}
   m_Layer: 10
-  m_Name: lightMeleeTrigger
-  m_TagString: Dragon
+  m_Name: shootSpawner
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -39,8 +38,8 @@ GameObject:
   - component: {fileID: 95708203629427356}
   - component: {fileID: 50469421361769330}
   - component: {fileID: 61385841132940942}
-  - component: {fileID: 114256814312175072}
   - component: {fileID: 114567339680436110}
+  - component: {fileID: 114185085283858958}
   m_Layer: 10
   m_Name: Dragon 1
   m_TagString: Dragon
@@ -55,21 +54,21 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1352469227588762}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -3.12, y: 1.43, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4380373049066668}
+  - {fileID: 4961218734647690}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4380373049066668
+--- !u!4 &4961218734647690
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1305045186600706}
+  m_GameObject: {fileID: 1044447677178022}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.2, y: 1.35, z: 0}
+  m_LocalPosition: {x: 1.6, y: 2.23, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4320826255223674}
@@ -120,18 +119,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.2230768, y: 2.8461537}
   m_EdgeRadius: 0
---- !u!65 &65472026903810494
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1305045186600706}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.6461384, y: 1.73, z: 1}
-  m_Center: {x: 0.17693079, y: 0, z: 0}
 --- !u!95 &95708203629427356
 Animator:
   serializedVersion: 3
@@ -149,7 +136,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114256814312175072
+--- !u!114 &114185085283858958
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -157,10 +144,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1352469227588762}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67c18332cd0326c4095e49e8ce3e7dbd, type: 3}
+  m_Script: {fileID: 11500000, guid: 3f8459a54ec384e4fa992da34d28e13d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectile: {fileID: 1052210026651742, guid: 8fa7f533120e35e4babe7f360ee4c1ec, type: 2}
+  Health: 0
+  Energy: 0
+  isDead: 0
 --- !u!114 &114567339680436110
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -173,13 +162,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
-  numberOfRays: 5
+  numberOfRays: 10
   isGrounded: 0
   isFloating: 0
   fallGravity: 5
   jumpGravity: 2
   floatGravity: 0.3
+  projectile: {fileID: 1052210026651742, guid: 8fa7f533120e35e4babe7f360ee4c1ec, type: 2}
+  spawnProjectiles: {fileID: 1044447677178022}
+  heavyMeleeCost: 0
+  ultimateAttackCost: 0
   playerNumber: 2
+  isBlocking: 0
+  ultimateWaitTime: 0
+  dashForce: 10
+  isDashing: 0
+  dashWaitTime: 0.05
 --- !u!212 &212234225746708852
 SpriteRenderer:
   m_ObjectHideFlags: 1

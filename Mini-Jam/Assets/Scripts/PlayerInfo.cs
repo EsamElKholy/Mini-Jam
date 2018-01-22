@@ -6,13 +6,16 @@ public class PlayerInfo : MonoBehaviour
 {
     public int Health;
     public int Energy;
+    public bool isDead;
     // Use this for initialization
 
     void Start ()
     {
         Health = 100;
         Energy = 100;
-	}
+        isDead = false;
+
+    }
 	
 	// Update is called once per frame
 	void Update ()
