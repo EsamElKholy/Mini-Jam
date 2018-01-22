@@ -8,9 +8,9 @@ public class ShootProjectile : MonoBehaviour
 
     // Update is called once per frame
 
-    public void Shoot(float dir)
+    public void Shoot(float dir, KeyCode button)
     {
-        if (Input.GetKeyUp(KeyCode.F))
+        if (Input.GetKeyUp(button))
         {
             Vector3 position = new Vector3();
             position = this.transform.position;

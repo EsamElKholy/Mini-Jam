@@ -9,8 +9,7 @@ public class BulletControllerForBsela : MonoBehaviour
     public float destroyTime;
     public string targetTag;
     void Start ()
-    {
-        
+    {        
         Destroy(this.gameObject, destroyTime);
     }
 	
@@ -19,12 +18,30 @@ public class BulletControllerForBsela : MonoBehaviour
     {
         
     }
-   
+
+    private void OnTriggerEnter2D(Collider2D otherObj)
+    {
+        
+    }
+
     private void OnCollisionEnter2D(Collision2D otherObj)
     {
         if (otherObj.gameObject.tag == targetTag)
         {
-            Destroy(this.gameObject); 
+            var controller = otherObj.gameObject.GetComponent<CharacterController>();
+            var info = otherObj.gameObject.GetComponent<PlayerInfo>();
+
+            if (controller.isBlocking && info.Energy > 0)
+            {
+                info.AddHealth(-5);
+                info.AddEnergy(-10);
+            }
+            else
+            {
+                info.AddHealth(-10);
+            }
+
+            Destroy(this.gameObject);
         }
     }
 

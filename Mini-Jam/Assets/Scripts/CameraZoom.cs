@@ -47,7 +47,7 @@ public class CameraZoom : MonoBehaviour {
         // initializes scene size and camera distance
         calcScreen(f1, f2);
         wScene = xR - xL;
-        zCam = transform.position.z - z0;
+        zCam = (transform.position.z - z0);// / 2.5f;
     }
 
     void Update()
@@ -60,7 +60,8 @@ public class CameraZoom : MonoBehaviour {
         { // if fighters too far adjust camera distance
             
             pos.z = zCam * width / wScene + z0;
-           
+
+            pos.z = Mathf.Clamp(pos.z, -19, -10);           
         }
         // centers the camera
 
