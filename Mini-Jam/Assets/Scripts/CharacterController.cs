@@ -13,6 +13,7 @@ public class CharacterController : MonoBehaviour
     private Vector2[] rayCastRight;
     private Vector2[] rayCastLeft;
     private Animator myAnimator;
+    
 
     public bool isGrounded;
     private bool canFloat;
@@ -24,7 +25,9 @@ public class CharacterController : MonoBehaviour
     public float floatGravity = 0.3f;
     float facingDirection;
     public GameObject projectile;
+    public GameObject takry3aa;
     public GameObject spawnProjectiles;
+    public GameObject spawnTakry3;
 
     bool controllerConnected;
 
@@ -61,9 +64,18 @@ public class CharacterController : MonoBehaviour
     public float dashWaitTime;
     private float dashTimeCounter;
 
+    private bool isShooting;
+    public float shootCoolDown;
+    private float shootCoolDownCounter;
+    public float projectileSpeed;
+
+    public bool dontStart = true;
+
     // Use this for initialization
     void Start ()
     {
+        shootCoolDown = 1;
+        shootCoolDownCounter = 0;
         myDirection = 0;
         isBlocking = false;
         isDashing = false;
@@ -134,6 +146,7 @@ public class CharacterController : MonoBehaviour
         dashForce = 35;
         dashWaitTime = 0.17f;
         dashTimeCounter = 0;
+        projectileSpeed = 20;
 
         facingDirection = 1;
         body = GetComponent<Rigidbody2D>();
@@ -173,6 +186,11 @@ public class CharacterController : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+        if (!dontStart)
+        {
+            return;
+        }
+
         if (!info.isDead)
         {
             Move();
@@ -201,6 +219,14 @@ public class CharacterController : MonoBehaviour
                     HeavyMeleeDragon();
                 }
             }
+            else
+            {
+                if (playerNumber==1)
+                {
+                    carrotCollider.enabled = true;
+                    myAnimator.SetBool("heavyMelee", false);
+                }
+            }
 
             if (info.Energy >= ultimateAttackCost)
             {
@@ -209,8 +235,11 @@ public class CharacterController : MonoBehaviour
 
             Block();
         }
-        
-        Die();
+
+        if (!info.isDead)
+        {
+            Die();
+        }
     }
 
     void Move()
@@ -295,7 +324,7 @@ public class CharacterController : MonoBehaviour
 
         if (body.velocity.y <= 0)
         {
-            print(body.velocity.y);
+            //sprint(body.velocity.y);
             myAnimator.SetBool("jump", false);
             myAnimator.SetBool("fall", true);
             body.gravityScale = fallGravity / 2.0f;
@@ -388,7 +417,7 @@ public class CharacterController : MonoBehaviour
 
     void Shoot()
     {
-        if (Input.GetKeyDown(fire))
+        if (Input.GetKeyDown(fire) && !isShooting)
         {
             if (myAnimator.GetBool("isAttacking") == false)
             {
@@ -396,8 +425,9 @@ public class CharacterController : MonoBehaviour
             }           
 
         }
-        else if (Input.GetKeyUp(fire))
-        {                        
+        else if (Input.GetKeyUp(fire) && !isShooting)
+        {
+            isShooting = true;
             myAnimator.SetBool("isAttacking", false);
 
             Vector3 position = new Vector3();
@@ -407,34 +437,60 @@ public class CharacterController : MonoBehaviour
 
             if (facingDirection > 0)
             {
-                newlyCreatedObjectVelocity.x = 10;
+                newlyCreatedObjectVelocity.x = projectileSpeed;
             }
             else
             {
-                newlyCreatedObjectVelocity.x = -10;
+                newlyCreatedObjectVelocity.x = -projectileSpeed;
+                var scale = newlyCreatedBsela.transform.localScale;
+                scale.x *= -1.0f;
+                newlyCreatedBsela.transform.localScale = scale;
             }
 
             newlyCreatedBsela.GetComponent<Rigidbody2D>().velocity = newlyCreatedObjectVelocity;
+
+        }
+        if (isShooting)
+        {
+            shootCoolDownCounter += Time.deltaTime;
+        }
+        if (shootCoolDownCounter>=shootCoolDown)
+        {
+            isShooting = false;
+            shootCoolDownCounter = 0;
         }
     }
 
     void LightMelee()
     {
         if (Input.GetKeyDown(lightMelee))
-        {            
+        {
+            myAnimator.SetBool("lightMelee", true);
+
+           
+        }
+
+        if (Input.GetKeyUp(lightMelee))
+        {
+            myAnimator.SetBool("lightMelee", false);
             RaycastHit2D hit = new RaycastHit2D();
             for (int i = 0; i < numberOfRays; i++)
             {
-                if (facingDirection == 1)
+                if (facingDirection > 0)
                 {
                     Debug.DrawLine(this.transform.position + (Vector3)rayCastRight[i], this.transform.position + (Vector3)rayCastRight[i] + (Vector3.right * 0.7f));
-                    hit = Physics2D.Raycast(this.transform.position + (Vector3)rayCastRight[i], Vector3.right, .7f);
+                    hit = Physics2D.Raycast(this.transform.position + (Vector3)rayCastRight[i], Vector3.right, 0.7f);
                 }
                 else
                 {
                     Debug.DrawLine(this.transform.position + (Vector3)rayCastLeft[i], this.transform.position + (Vector3)rayCastLeft[i] + (-Vector3.right * 0.7f));
-                    hit = Physics2D.Raycast(this.transform.position + (Vector3)rayCastLeft[i], -Vector3.right, .7f);
-                } 
+                    hit = Physics2D.Raycast(this.transform.position + (Vector3)rayCastLeft[i], -Vector3.right, 0.7f);
+                }
+
+                if (hit)
+                {
+                    break;
+                }
             }
 
             if (hit)
@@ -480,8 +536,13 @@ public class CharacterController : MonoBehaviour
     {
         if (Input.GetKeyDown(heavyMelee))
         {
-            info.AddEnergy(-heavyMeleeCost);
+            myAnimator.SetBool("heavyMelee", true);
+            info.AddEnergy(-heavyMeleeCost);           
+        }
+        if (Input.GetKeyUp(heavyMelee))
+        {
             carrotCollider.enabled = true;
+            myAnimator.SetBool("heavyMelee", false);
         }
     }
 
@@ -489,6 +550,9 @@ public class CharacterController : MonoBehaviour
     {
         if (Input.GetKeyDown(heavyMelee))
         {
+            Vector3 position = new Vector3();
+            position = spawnTakry3.transform.position;
+            var takry3a = Instantiate(takry3aa, position, transform.rotation);
             info.AddEnergy(-heavyMeleeCost);
 
             shake.enabled = false;
@@ -500,18 +564,26 @@ public class CharacterController : MonoBehaviour
             {
                 if (facingDirection == 1)
                 {
-                    Debug.DrawLine(this.transform.position + (Vector3)rayCastRight[i], this.transform.position + (Vector3)rayCastRight[i] + (Vector3.right * 10));
-                    hit = Physics2D.Raycast(this.transform.position + (Vector3)rayCastRight[i], Vector3.right, 10f);
+                    Debug.DrawLine(this.transform.position + (Vector3)rayCastRight[i], this.transform.position + (Vector3)rayCastRight[i] + (Vector3.right * 5));
+                    hit = Physics2D.Raycast(this.transform.position + (Vector3)rayCastRight[i], Vector3.right, 5f);
                 }
                 else
                 {
-                    Debug.DrawLine(this.transform.position + (Vector3)rayCastLeft[i], this.transform.position + (Vector3)rayCastLeft[i] + (-Vector3.right * 10));
-                    hit = Physics2D.Raycast(this.transform.position + (Vector3)rayCastLeft[i], -Vector3.right, 10);
+                    Debug.DrawLine(this.transform.position + (Vector3)rayCastLeft[i], this.transform.position + (Vector3)rayCastLeft[i] + (-Vector3.right * 5));
+                    hit = Physics2D.Raycast(this.transform.position + (Vector3)rayCastLeft[i], -Vector3.right, 5);
+                }
+
+                if (hit)
+                {
+                    break;
                 }
             }
 
             if (hit)
             {
+               
+             
+               
                 if (hit.collider.tag == "Bsela")
                 {
                     var controller = hit.collider.GetComponent<CharacterController>();
@@ -556,11 +628,16 @@ public class CharacterController : MonoBehaviour
     {
         if (info.Health == 0)
         {
+            if (!info.isDead)
+            {
+                myAnimator.SetTrigger("isDead");
+            }
+
             info.isDead = true;
         }
     }
 
-   void Dash()
+    void Dash()
     {
         if (myAnimator == null)
         {

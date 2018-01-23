@@ -1,12 +1,15 @@
 fileFormatVersion: 2
-guid: 2997105a704c12e4b81975b50e6cfce1
-timeCreated: 1516639652
+guid: 5b035268f535316448cfc88e8030d0ff
+timeCreated: 1516699730
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: besla_0
-    21300002: besla_1
-    21300004: besla_2
+    21300000: 6
+    21300002: 5
+    21300004: 4
+    21300006: 3
+    21300008: 2
+    21300010: 1
   externalObjects: {}
   serializedVersion: 4
   mipmaps:
@@ -49,7 +52,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 150
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -103,13 +106,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: besla_0
+      name: 6
       rect:
         serializedVersion: 2
-        x: 32
-        y: 41
-        width: 136
-        height: 125
+        x: 36
+        y: 573
+        width: 242
+        height: 217
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -117,13 +120,13 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: besla_1
+      name: 5
       rect:
         serializedVersion: 2
-        x: 221
-        y: 39
-        width: 144
-        height: 129
+        x: 374
+        y: 601
+        width: 293
+        height: 188
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -131,13 +134,55 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: besla_2
+      name: 4
       rect:
         serializedVersion: 2
-        x: 418
-        y: 28
-        width: 153
-        height: 138
+        x: 0
+        y: 314
+        width: 316
+        height: 202
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 3
+      rect:
+        serializedVersion: 2
+        x: 385
+        y: 316
+        width: 269
+        height: 192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 2
+      rect:
+        serializedVersion: 2
+        x: 37
+        y: 35
+        width: 244
+        height: 169
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 1
+      rect:
+        serializedVersion: 2
+        x: 417
+        y: 52
+        width: 206
+        height: 142
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
