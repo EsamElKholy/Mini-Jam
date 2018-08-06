@@ -1,11 +1,27 @@
 fileFormatVersion: 2
 guid: d105390b3453afb43bcdfea574f3614d
-timeCreated: 1516558415
+timeCreated: 1516778960
 licenseType: Free
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - bselaProjectileClip: {fileID: 8300000, guid: 42764fefcf39ca5408934c632484450b,
+      type: 3}
+  - bselaCarrotsFromTheGroundClip: {fileID: 8300000, guid: f35f9bf04f1bfa5459e90c405a065410,
+      type: 3}
+  - bselaSwooshLightMelee: {fileID: 8300000, guid: ca48de1d308e0c645b521cbf8be93ef9,
+      type: 3}
+  - bselaVictoryClip: {instanceID: 0}
+  - dragonBoingKershClip: {instanceID: 0}
+  - dragonFireBallClip: {instanceID: 0}
+  - dragonTakry3Clip: {instanceID: 0}
+  - dragonVictoryClip: {fileID: 8300000, guid: d0f21764d16f74e4695c5e736ca76819, type: 3}
+  - projectile: {instanceID: 0}
+  - takry3aa: {instanceID: 0}
+  - spawnProjectiles: {instanceID: 0}
+  - spawnTakry3: {instanceID: 0}
+  - carrotCollider: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LootSpawner : MonoBehaviour {
 
@@ -9,18 +10,28 @@ public class LootSpawner : MonoBehaviour {
     public Transform limitRight;
     public float coolDownTime;
     float coolDownCounter;
+    public AudioClip clip;
+    public Button button;
+    bool gameStarted = false;
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start ()
     {
         coolDownTime = 15;
         coolDownCounter = 0;
-
+        this.GetComponent<AudioSource>().volume = .7f;
+        this.GetComponent<AudioSource>().PlayOneShot(clip);
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
+        if (Input.GetKeyUp(KeyCode.Joystick1Button9) && gameStarted == false)
+        {
+            button.GetComponent<UIButton>().StartGame();
+            gameStarted = true;
+        }
+
         coolDownCounter += Time.deltaTime;
         if (coolDownCounter>coolDownTime)
         {

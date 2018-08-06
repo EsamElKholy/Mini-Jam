@@ -17,33 +17,41 @@ public class CarrotAttack : MonoBehaviour
     PlayerInfo myInfo;
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
         myCollider = GetComponent<Collider2D>();
         attackTimeCounter = 0;
         attackWaitTime = 0.2f;
 
-         carrotWaitTime=0.005f;
-         carrotTimeCounter=0;
+        carrotWaitTime = 0.005f;
+        carrotTimeCounter = 0;
 
     }
 
     // Update is called once per frame
-    void Update ()
-    {        
-        attackTimeCounter += Time.deltaTime;
+    void Update()
+    {
+        if (!beginCarrotAttack)
+        {
+            attackTimeCounter += Time.deltaTime;
 
-        if (attackTimeCounter >= attackWaitTime)
+            if (attackTimeCounter >= attackWaitTime)
+            {
+                attackTimeCounter = 0;
+                myCollider.enabled = false;
+            }
+        }
+        else
         {
             attackTimeCounter = 0;
-            myCollider.enabled = false;
         }
 
         if (beginCarrotAttack)
         {
             carrotTimeCounter += Time.deltaTime;
         }
-        if (carrotTimeCounter>=carrotWaitTime)
+
+        if (carrotTimeCounter >= carrotWaitTime)
         {
             if (myController.isBlocking)
             {
@@ -54,8 +62,10 @@ public class CarrotAttack : MonoBehaviour
             {
                 myInfo.AddHealth(-15);
             }
+
             myCollider.enabled = false;
-            myBody.AddForce(new Vector2(50, 25) * 1.0f, ForceMode2D.Impulse);
+            myBody.velocity += new Vector2(10, 20);
+          //  myBody.AddForce(new Vector2(50, 25) * 1.0f, ForceMode2D.Impulse);
             carrotTimeCounter = 0;
             beginCarrotAttack = false;
         }
@@ -66,11 +76,9 @@ public class CarrotAttack : MonoBehaviour
         if (collision.gameObject.tag == "Dragon")
         {
             myBody = collision.GetComponent<Rigidbody2D>();
-            myInfo= collision.gameObject.GetComponent<PlayerInfo>();
+            myInfo = collision.gameObject.GetComponent<PlayerInfo>();
             myController = collision.gameObject.GetComponent<CharacterController>();
             beginCarrotAttack = true;
-            
-            
         }
     }
     //private void OnCollisionEnter2D(Collision2D collision)

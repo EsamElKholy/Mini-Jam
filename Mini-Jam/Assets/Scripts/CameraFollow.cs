@@ -41,7 +41,7 @@ public class CameraFollow : MonoBehaviour
     void Start()
     {
         camDistance = 15.0f;
-        bounds = 20.0f;
+        bounds = 20.0f;        
     }
 
     // Update is called once per frame

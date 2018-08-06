@@ -1,9 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CharacterController : MonoBehaviour
 {
+    public AudioClip bselaProjectileClip;
+    public AudioClip bselaCarrotsFromTheGroundClip;
+    public AudioClip bselaSwooshLightMelee;
+    public AudioClip bselaVictoryClip;
+    public AudioClip dragonBoingKershClip;
+    public AudioClip dragonFireBallClip;
+    public AudioClip dragonTakry3Clip;
+    public AudioClip dragonVictoryClip;
+
     public float speed;
     private Rigidbody2D body;
     private float xMin, xMax, yMin, yMax;
@@ -71,10 +81,17 @@ public class CharacterController : MonoBehaviour
 
     public bool dontStart = true;
 
+    private float reloadWaitTime = 8;
+    private float reloadWaitCounter = 0;
+
+    public GameObject blockSprite;
+
+    public GameObject lootSpawner;
+
     // Use this for initialization
     void Start ()
     {
-        shootCoolDown = 1;
+        shootCoolDown = 0.7f;
         shootCoolDownCounter = 0;
         myDirection = 0;
         isBlocking = false;
@@ -117,10 +134,20 @@ public class CharacterController : MonoBehaviour
 
             if (playerNumber == 1)
             {
-                jump = KeyCode.Joystick1Button0;
+                //good controlls for xBox controller
+                //jump = KeyCode.Joystick1Button0;
+                //fire = KeyCode.Joystick1Button1;
+                //lightMelee = KeyCode.Joystick1Button2;
+                //heavyMelee = KeyCode.Joystick1Button3;
+                //block = KeyCode.Joystick1Button5;
+                //ultimate1 = KeyCode.Joystick1Button6;
+                //ultimate2 = KeyCode.Joystick1Button7;
+                //dash = KeyCode.Joystick1Button4;
+                //lame controlls for lame controllers
+                jump = KeyCode.Joystick1Button2;
                 fire = KeyCode.Joystick1Button1;
-                lightMelee = KeyCode.Joystick1Button2;
-                heavyMelee = KeyCode.Joystick1Button3;
+                lightMelee = KeyCode.Joystick1Button3;
+                heavyMelee = KeyCode.Joystick1Button0;
                 block = KeyCode.Joystick1Button5;
                 ultimate1 = KeyCode.Joystick1Button6;
                 ultimate2 = KeyCode.Joystick1Button7;
@@ -128,15 +155,15 @@ public class CharacterController : MonoBehaviour
             }
             else if (playerNumber == 2)
             {
-                jump = KeyCode.Joystick2Button0;
+                jump = KeyCode.Joystick2Button2;
                 fire = KeyCode.Joystick2Button1;
-                lightMelee = KeyCode.Joystick2Button2;
-                heavyMelee = KeyCode.Joystick2Button3;
+                lightMelee = KeyCode.Joystick2Button3;
+                heavyMelee = KeyCode.Joystick2Button0;
                 block = KeyCode.Joystick2Button5;
                 ultimate1 = KeyCode.Joystick2Button6;
                 ultimate2 = KeyCode.Joystick2Button7;
                 dash = KeyCode.Joystick2Button4;
-            }           
+            }
         }
 
         heavyMeleeCost = 25;
@@ -181,12 +208,14 @@ public class CharacterController : MonoBehaviour
             rayCastRight[i] = new Vector2(xMax, y);
             rayCastLeft[i] = new Vector2(xMin, y);
         }
+
+        dontStart = true;
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        if (!dontStart)
+        if (dontStart == true)
         {
             return;
         }
@@ -223,7 +252,6 @@ public class CharacterController : MonoBehaviour
             {
                 if (playerNumber==1)
                 {
-                    carrotCollider.enabled = true;
                     myAnimator.SetBool("heavyMelee", false);
                 }
             }
@@ -239,6 +267,17 @@ public class CharacterController : MonoBehaviour
         if (!info.isDead)
         {
             Die();
+        }
+
+        if (info.isDead)
+        {
+            reloadWaitCounter += Time.deltaTime;
+        }
+
+        if (reloadWaitCounter >= reloadWaitTime)
+        {
+            reloadWaitCounter = 0;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 
@@ -419,11 +458,21 @@ public class CharacterController : MonoBehaviour
     {
         if (Input.GetKeyDown(fire) && !isShooting)
         {
+            if (gameObject.tag == "Dragon")
+            {
+                this.GetComponent<AudioSource>().volume = 1f;
+                this.GetComponent<AudioSource>().PlayOneShot(dragonFireBallClip);
+            }
+            else
+            {
+                this.GetComponent<AudioSource>().volume = 1f;
+                this.GetComponent<AudioSource>().PlayOneShot(bselaProjectileClip);
+            }
+
             if (myAnimator.GetBool("isAttacking") == false)
             {
                 myAnimator.SetBool("isAttacking", true);
-            }           
-
+            }         
         }
         else if (Input.GetKeyUp(fire) && !isShooting)
         {
@@ -465,9 +514,18 @@ public class CharacterController : MonoBehaviour
     {
         if (Input.GetKeyDown(lightMelee))
         {
-            myAnimator.SetBool("lightMelee", true);
+            if (gameObject.tag == "Dragon")
+            {
+                this.GetComponent<AudioSource>().volume = 1f;
+                this.GetComponent<AudioSource>().PlayOneShot(dragonBoingKershClip);
+            }
+            else
+            {
+                this.GetComponent<AudioSource>().volume = 1f;
+                this.GetComponent<AudioSource>().PlayOneShot(bselaSwooshLightMelee);
+            }
 
-           
+            myAnimator.SetBool("lightMelee", true);           
         }
 
         if (Input.GetKeyUp(lightMelee))
@@ -524,10 +582,12 @@ public class CharacterController : MonoBehaviour
             if (Input.GetKeyDown(block))
             {
                 isBlocking = true;
+                blockSprite.SetActive(true);
             }
             else if (Input.GetKeyUp(block))
             {
                 isBlocking = false;
+                blockSprite.SetActive(false);
             }
         }       
     }
@@ -536,11 +596,13 @@ public class CharacterController : MonoBehaviour
     {
         if (Input.GetKeyDown(heavyMelee))
         {
+            this.GetComponent<AudioSource>().volume = 1f;
+            this.GetComponent<AudioSource>().PlayOneShot(bselaCarrotsFromTheGroundClip);
             myAnimator.SetBool("heavyMelee", true);
-            info.AddEnergy(-heavyMeleeCost);           
         }
         if (Input.GetKeyUp(heavyMelee))
         {
+            info.AddEnergy(-heavyMeleeCost);           
             carrotCollider.enabled = true;
             myAnimator.SetBool("heavyMelee", false);
         }
@@ -550,6 +612,9 @@ public class CharacterController : MonoBehaviour
     {
         if (Input.GetKeyDown(heavyMelee))
         {
+            this.GetComponent<AudioSource>().volume = 1;
+            this.GetComponent<AudioSource>().PlayOneShot(dragonTakry3Clip);
+
             Vector3 position = new Vector3();
             position = spawnTakry3.transform.position;
             var takry3a = Instantiate(takry3aa, position, transform.rotation);
@@ -580,10 +645,7 @@ public class CharacterController : MonoBehaviour
             }
 
             if (hit)
-            {
-               
-             
-               
+            {                    
                 if (hit.collider.tag == "Bsela")
                 {
                     var controller = hit.collider.GetComponent<CharacterController>();
@@ -628,6 +690,20 @@ public class CharacterController : MonoBehaviour
     {
         if (info.Health == 0)
         {
+            lootSpawner.GetComponent<AudioSource>().Stop();
+            if (gameObject.tag == "Dragon")
+            {
+                this.GetComponent<AudioSource>().volume = 1f;
+                this.GetComponent<AudioSource>().PlayOneShot(bselaVictoryClip);
+
+            }
+            else
+            {
+                this.GetComponent<AudioSource>().volume = 2f;
+                this.GetComponent<AudioSource>().PlayOneShot(dragonVictoryClip);
+
+            }
+
             if (!info.isDead)
             {
                 myAnimator.SetTrigger("isDead");
